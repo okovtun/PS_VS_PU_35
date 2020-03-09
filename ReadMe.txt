@@ -1,6 +1,9 @@
 ﻿https://github.com/okovtun/PS_VS_PU_35
 
 TODO:
+Добить базу данных ГАИ.
+
+DONE:
 Проверчный код в блоке RANGE_BASED_FOR должен заработать.
 
 DONE:
