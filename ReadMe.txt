@@ -1,6 +1,13 @@
 ﻿https://github.com/okovtun/PS_VS_PU_35
 
+/////////////////////////////////////
+//	Discord: okovtun#7508	   //
+/////////////////////////////////////
+
 TODO:
+Научить машину ездить:https://www.codewars.com/kata/578df8f3deaed98fcf0001e9
+
+DONE:
 Добить базу данных ГАИ.
 
 DONE:
