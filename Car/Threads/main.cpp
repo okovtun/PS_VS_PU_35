@@ -28,9 +28,15 @@ void main()
 	std::thread thread_what(What);
 	std::thread thread_is(Is);
 
+	std::cout << thread_what.get_id() << std::endl;
+
 	std::cin.get();	//Ожидает нажатие клавиши Enter, нажатие остальных клавиш - игнорирует.
 	finish = true;
 
 	thread_is.join();
 	thread_what.join();
+
+	std::thread thread;
+	std::cout << thread.get_id() << std::endl;
+	std::cout << thread.joinable() << std::endl;
 }
