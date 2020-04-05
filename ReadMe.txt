@@ -1,10 +1,18 @@
 ﻿https://github.com/okovtun/PS_VS_PU_35
 
+Video:
+https://www.youtube.com/watch?v=18c3MTX0PK0&list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb
+
 /////////////////////////////////////
 //	Discord: okovtun#7508	   //
 /////////////////////////////////////
 
 TODO:
+1. При выходе из машины панель приборов должна пропадать из виду, она должна отображаться только когда мы в машине;
+2. Расход топлива должен меняться в зависимости от скорости;
+3. ***Добавить пробег (Hardcore);
+
+DONE:
 Научить машину ездить:https://www.codewars.com/kata/578df8f3deaed98fcf0001e9
 
 DONE:
