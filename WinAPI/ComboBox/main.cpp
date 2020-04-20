@@ -21,6 +21,8 @@ const CHAR* string[] =
 	"Box"
 };
 
+CHAR buffer[25]{};
+
 BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow)
@@ -55,7 +57,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	break;
 	case WM_COMMAND:
 	{
-		CHAR buffer[25]{};
+		//CHAR buffer[25]{};
 		switch (LOWORD(wParam))
 		{
 		case IDC_COMBO1:
@@ -64,13 +66,14 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			{
 				int i = SendMessage(hCombo, CB_GETCURSEL, 0, 0);
 				SendMessage(hCombo, CB_GETLBTEXT, i, (LPARAM)buffer);
-				MessageBox(hwnd, buffer, "¬ыбранный пункт выпадающего списка", MB_OK | MB_ICONINFORMATION);
+				//MessageBox(hwnd, buffer, "¬ыбранный пункт выпадающего списка", MB_OK | MB_ICONINFORMATION);
 			}
 		}
 		break;
 		case IDOK:
 			//MessageBox(hwnd, "Hello", "Hi", MB_OK | MB_ICONINFORMATION);
-			MessageBox(hwnd, typeid(string).name(), "Hi", MB_OK | MB_ICONINFORMATION);
+			//MessageBox(hwnd, typeid(string).name(), "Hi", MB_OK | MB_ICONINFORMATION);
+			MessageBox(hwnd, buffer, "¬ыбранный пункт выпадающего списка", MB_OK | MB_ICONINFORMATION);
 			break;
 		case IDCANCEL:
 			EndDialog(hwnd, 0);
