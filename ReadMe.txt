@@ -1,6 +1,9 @@
 ﻿https://github.com/okovtun/PS_VS_PU_35
 
 Video:
+https://www.youtube.com/watch?v=LxpB2uqzBgw&list=PLFkgzpHG4CYX6wID2y0QTeBO7fOPNmGuu&index=2&t=0s
+https://www.youtube.com/watch?v=SnXIoJLi36w&list=PLFkgzpHG4CYXyXCDwck5bys2HW6LoTRk4&index=2&t=18s
+
 https://www.youtube.com/watch?v=18c3MTX0PK0&list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb
 https://www.youtube.com/watch?v=SnXIoJLi36w&list=PLFkgzpHG4CYXyXCDwck5bys2HW6LoTRk4&index=2&t=11s
 
@@ -9,6 +12,10 @@ https://www.youtube.com/watch?v=SnXIoJLi36w&list=PLFkgzpHG4CYXyXCDwck5bys2HW6LoT
 /////////////////////////////////////
 
 TODO:
+1. В SimpleWindow добавить пункт меню Help->User, при нажатии на который открывается диалоговое окно, в которое пользователь может ввести свое имя и дату рождения;
+2. Диалоговое окно About должно открываться при нажатии на кнопку F1;
+
+DONE:
 1. MessageBox с выбранным пунктом выпадающего списка должен появлятся не при выборе элемента, а при нажатии на кнопку OK;
 2. В другом проекте реализовать диалоговое окно с ListBox. При выборе пункта ListBox и нажатии на кнопку OK, должен появляться MessageBox с выбранным пунктом ListBox-a;
 3. Почитать WinAPI MSDN;
