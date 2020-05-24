@@ -12,7 +12,7 @@ BOOL	CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 BOOL	LoadTextFileToEdit(HWND hEdit, LPCTSTR pszFileName);
 BOOL	SaveTextFileFromEdit(HWND hEdit, LPCTSTR pszFileName);
 
-VOID DoFileOpen(HWND hwnd);
+BOOL __stdcall DoFileOpen(HWND hwnd);
 VOID DoFileSaveAs(HWND hwnd);
 
 BOOL FileWasChanged(HWND hwnd);
@@ -311,7 +311,7 @@ BOOL	SaveTextFileFromEdit(HWND hEdit, LPCTSTR pszFileName)
 }
 
 
-VOID DoFileOpen(HWND hwnd)
+BOOL __stdcall DoFileOpen(HWND hwnd)
 {
 	//Создадим стандартное окно открытия файла:
 	OPENFILENAME ofn;
@@ -331,7 +331,9 @@ VOID DoFileOpen(HWND hwnd)
 	{
 		HWND hEdit = GetDlgItem(hwnd, IDC_MAIN_EDIT);
 		LoadTextFileToEdit(hEdit, szFileName);
+		return TRUE;
 	}
+	return FALSE;
 }
 VOID DoFileSaveAs(HWND hwnd)
 {
