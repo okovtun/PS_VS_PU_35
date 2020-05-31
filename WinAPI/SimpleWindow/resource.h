@@ -8,6 +8,8 @@
 #define IDD_ABOUT                       103
 #define IDR_MENU2                       105
 #define IDC_MAIN_EDIT                   105
+#define IDC_MAIN_TOOL	106
+#define IDC_MAIN_STATUS	107
 
 #define HOTKEY_NEW		201
 #define HOTKEY_OPEN		202
