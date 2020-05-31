@@ -16,6 +16,7 @@ BOOL __stdcall DoFileOpen(HWND hwnd);
 VOID DoFileSaveAs(HWND hwnd);
 
 BOOL FileWasChanged(HWND hwnd);
+VOID SetWindowTitle(HWND hEdit);
 
 VOID WatchChanges(HWND hwnd, BOOL(__stdcall *Action)(HWND))
 {
@@ -300,7 +301,7 @@ BOOL	CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 BOOL	LoadTextFileToEdit(HWND hEdit, LPCTSTR pszFileName)
 {
 	BOOL bSuccess = FALSE;
-	MessageBox(hEdit, pszFileName, "Opening file:", MB_OK | MB_ICONINFORMATION);
+	//MessageBox(hEdit, pszFileName, "Opening file:", MB_OK | MB_ICONINFORMATION);
 	HANDLE hFile = CreateFile(pszFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 	if (hFile != INVALID_HANDLE_VALUE)
 	{
@@ -316,7 +317,11 @@ BOOL	LoadTextFileToEdit(HWND hEdit, LPCTSTR pszFileName)
 				if (ReadFile(hFile, lpszFileText, dwFileSize, &dwRead, NULL))
 				{
 					lpszFileText[dwFileSize] = 0;
-					if (SetWindowText(hEdit, lpszFileText))bSuccess = TRUE;
+					if (SetWindowText(hEdit, lpszFileText))
+					{
+						bSuccess = TRUE;
+						SetWindowTitle(hEdit);
+					}
 				}
 			}
 		}
@@ -341,7 +346,11 @@ BOOL	SaveTextFileFromEdit(HWND hEdit, LPCTSTR pszFileName)
 				if (GetWindowText(hEdit, lpszFileText, dwTextLength + 1))
 				{
 					DWORD dwWritten;
-					if (WriteFile(hFile, lpszFileText, dwTextLength, &dwWritten, NULL))bSuccess = TRUE;
+					if (WriteFile(hFile, lpszFileText, dwTextLength, &dwWritten, NULL))
+					{
+						bSuccess = TRUE;
+						SetWindowTitle(hEdit);
+					}
 				}
 			}
 		}
@@ -416,4 +425,13 @@ BOOL FileWasChanged(HWND hwnd)
 		GlobalFree(lpszCurrentText);
 	}
 	return bWasChanged;
+}
+
+VOID SetWindowTitle(HWND hEdit)
+{
+	CHAR szTitle[MAX_PATH] = "SimpleWindowEdit - ";
+	LPSTR lpszNameOnly = strrchr(szFileName, '\\') + 1;
+	strcat_s(szTitle, MAX_PATH, lpszNameOnly);
+	HWND hwndParent = GetParent(hEdit);
+	SetWindowText(hwndParent, szTitle);
 }
