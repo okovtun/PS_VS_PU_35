@@ -17,7 +17,7 @@ VOID DoFileSaveAs(HWND hwnd);
 
 BOOL FileWasChanged(HWND hwnd);
 
-VOID WatchChanges(HWND hwnd, BOOL (__stdcall *Action)(HWND))
+VOID WatchChanges(HWND hwnd, BOOL(__stdcall *Action)(HWND))
 {
 	if (FileWasChanged(hwnd))
 	{
@@ -36,6 +36,14 @@ VOID WatchChanges(HWND hwnd, BOOL (__stdcall *Action)(HWND))
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow)
 {
+	if (lpCmdLine[0])
+	{
+		//strcpy_s(szFileName, MAX_PATH, lpCmdLine);
+		for (int i = 0, j = 0; lpCmdLine[i]; i++)
+		{
+			if (lpCmdLine[i] != '\"')szFileName[j++] = lpCmdLine[i];
+		}
+	}
 	//1) Регистрация класса окна:
 	CONST CHAR SZ_CLASS_NAME[] = "myWindowClass";
 	WNDCLASSEX wc;
@@ -63,7 +71,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, in
 	//2) Создание окна:
 	HWND hwnd = CreateWindowEx
 	(
-		WS_EX_CLIENTEDGE,
+		WS_EX_ACCEPTFILES | WS_EX_CLIENTEDGE,
 		SZ_CLASS_NAME,
 		"Title of my Window",
 		WS_OVERLAPPEDWINDOW,
@@ -141,6 +149,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		HFONT hDefault = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
 		SendMessage(hEdit, WM_SETFONT, (WPARAM)hDefault, MAKELPARAM(FALSE, 0));
 
+		if (szFileName[0])
+		{
+			LoadTextFileToEdit(GetDlgItem(hwnd, IDC_MAIN_EDIT), szFileName);
+		}
+
 	}
 	break;
 	case WM_SIZE:
@@ -149,6 +162,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		GetClientRect(hwnd, &rcClient);
 		HWND hEdit = GetDlgItem(hwnd, IDC_MAIN_EDIT);
 		SetWindowPos(hEdit, NULL, 0, 0, rcClient.right, rcClient.bottom, SWP_NOZORDER);
+	}
+	break;
+	case WM_DROPFILES:
+	{
+		HDROP hDrop = (HDROP)wParam;
+		DragQueryFile(hDrop, 0, szFileName, MAX_PATH);
+		LoadTextFileToEdit(GetDlgItem(hwnd, IDC_MAIN_EDIT), szFileName);
+		DragFinish(hDrop);
 	}
 	break;
 	case WM_COMMAND:
@@ -260,7 +281,7 @@ BOOL	CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 BOOL	LoadTextFileToEdit(HWND hEdit, LPCTSTR pszFileName)
 {
 	BOOL bSuccess = FALSE;
-
+	MessageBox(hEdit, pszFileName, "Opening file:", MB_OK | MB_ICONINFORMATION);
 	HANDLE hFile = CreateFile(pszFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 	if (hFile != INVALID_HANDLE_VALUE)
 	{
