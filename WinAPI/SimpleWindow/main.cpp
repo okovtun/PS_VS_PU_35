@@ -154,6 +154,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			LoadTextFileToEdit(GetDlgItem(hwnd, IDC_MAIN_EDIT), szFileName);
 		}
 
+		//////////////////////////////////////////////////////////////////////////////////
+		///////////////////////////////		Hotkeys		//////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////
+		RegisterHotKey(hwnd, HOTKEY_NEW, MOD_CONTROL, 'N');
+		RegisterHotKey(hwnd, HOTKEY_OPEN, MOD_CONTROL, 'O');
+		RegisterHotKey(hwnd, HOTKEY_SAVE, MOD_CONTROL, 'S');
+		RegisterHotKey(hwnd, HOTKEY_SAVEAS, MOD_CONTROL + MOD_ALT, 'S');
+		RegisterHotKey(hwnd, HOTKEY_ABOUT, 0, VK_F1);
+		//////////////////////////////////////////////////////////////////////////////////
 	}
 	break;
 	case WM_SIZE:
@@ -172,6 +181,16 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		DragFinish(hDrop);
 	}
 	break;
+	case WM_HOTKEY:
+		switch (wParam)
+		{
+		case HOTKEY_NEW:SendMessage(hwnd, WM_COMMAND, ID_FILE_NEW, 0); break;
+		case HOTKEY_OPEN:SendMessage(hwnd, WM_COMMAND, ID_FILE_OPEN, 0); break;
+		case HOTKEY_SAVE:SendMessage(hwnd, WM_COMMAND, ID_FILE_SAVE, 0); break;
+		case HOTKEY_SAVEAS:SendMessage(hwnd, WM_COMMAND, ID_FILE_SAVEAS, 0); break;
+		case HOTKEY_ABOUT:SendMessage(hwnd, WM_COMMAND, ID_HELP_ABOUT, 0); break;
+		}
+		break;
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
 		{
