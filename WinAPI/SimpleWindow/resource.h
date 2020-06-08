@@ -23,6 +23,7 @@
 #define ID_FILE_SAVE                    40004
 #define ID_FILE_SAVEAS                  40005
 #define ID_FILE_EXIT                    40006
+#define ID_FORMAT_FONT	40008
 
 // Next default values for new objects
 // 

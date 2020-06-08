@@ -7,6 +7,9 @@ CONST CHAR szFilter[] = "Text files (*.txt)\0*.txt\0All files (*.*)\0*.*\0";
 CHAR szFileName[MAX_PATH] = {};	//Имя открытого, или сохраненного файла
 LPSTR lpszFileText;		//Содержимое открытого, или сохраненного файла
 
+HFONT g_hFont;
+COLORREF g_rgbText;
+
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 BOOL	CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -35,6 +38,8 @@ VOID WatchChanges(HWND hwnd, BOOL(__stdcall *Action)(HWND))
 		Action(hwnd);
 	}
 }
+
+VOID DoSelectFont(HWND hwnd);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -119,6 +124,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		AppendMenu(hSubMenu, MF_SEPARATOR, 0, 0);
 		AppendMenu(hSubMenu, MF_STRING, ID_FILE_EXIT, "E&xit");
 		AppendMenu(hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, "&File");
+
+		hSubMenu = CreatePopupMenu();
+		AppendMenu(hSubMenu, MF_STRING, ID_FORMAT_FONT, "Font");
+		AppendMenu(hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, "Format");
 
 		hSubMenu = CreatePopupMenu();
 		AppendMenu(hSubMenu, MF_STRING, ID_HELP_ABOUT, "&About");
@@ -234,6 +243,30 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		SendMessage(hStatus, SB_SETTEXT, 0, (LPARAM)"This is a status bar...");
 
 		//////////////////////////////////////////////////////////////////////////////////
+
+		//////////////////////////////////////////////////////////////////////////////////
+		///////////////////////////////		Font		//////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////
+
+		HDC hdc = GetDC(NULL);
+		int lfHeight = -MulDiv(22, GetDeviceCaps(hdc, LOGPIXELSY), 72);
+		ReleaseDC(NULL, hdc);
+
+		HFONT hFont = CreateFont
+		(
+			lfHeight, 0, 0, 0, 0,
+			FALSE,	//Italic
+			0, 
+			0, 
+			RUSSIAN_CHARSET,	//Charset 
+			0, 0, 0, 0,
+			"Times New Roman"
+		);
+		g_hFont = hFont;
+		SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, 0);
+		SetFocus(hEdit);
+		
+		//////////////////////////////////////////////////////////////////////////////////
 	}
 	break;
 	case WM_SIZE:
@@ -321,6 +354,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case ID_FILE_EXIT:
 			//DestroyWindow(hwnd);
 			SendMessage(hwnd, WM_CLOSE, 0, 0);
+			break;
+		case ID_FORMAT_FONT:
+			DoSelectFont(hwnd);
 			break;
 		case ID_HELP_ABOUT:
 		{
@@ -522,4 +558,37 @@ VOID SetWindowTitle(HWND hEdit)
 	strcat_s(szTitle, MAX_PATH, lpszNameOnly);
 	HWND hwndParent = GetParent(hEdit);
 	SetWindowText(hwndParent, szTitle);
+}
+
+VOID DoSelectFont(HWND hwnd)
+{
+	CHOOSEFONT cf;
+	LOGFONT lf;
+
+	/*ZeroMemory(&cf, sizeof(cf));
+	ZeroMemory(&lf, sizeof(lf));*/
+
+	GetObject(g_hFont, sizeof(LOGFONT), &lf);
+
+	cf.Flags = CF_EFFECTS | CF_INITTOLOGFONTSTRUCT | CF_SCREENFONTS;
+	cf.hwndOwner = hwnd;
+	cf.hInstance = GetModuleHandle(NULL);
+	cf.lpLogFont = &lf;
+	cf.rgbColors = g_rgbText;
+	cf.lStructSize = sizeof(CHOOSEFONT);
+
+	if (ChooseFont(&cf))
+	{
+		HFONT hf = CreateFontIndirect(&lf);
+		if (hf)
+		{
+			g_hFont = hf;
+		}
+		else
+		{
+			MessageBox(hwnd, "Font creation failed", "Error", MB_OK | MB_ICONERROR);
+		}
+		g_rgbText = cf.rgbColors;
+	}
+	SendMessage(GetDlgItem(hwnd, IDC_MAIN_EDIT), WM_SETFONT, (WPARAM)g_hFont, TRUE);
 }
